@@ -12,7 +12,7 @@ function TodoItem({ task, deleteTask, toggleTask, editTask }) {
   }
 
   return (
-    <div className="flex justify-between items-center border p-2 rounded">
+    <div className="flex justify-between items-center bg-gray-50 dark:bg-gray-800 p-3 rounded-lg shadow-sm">
 
       {isEditing ? (
         <input
@@ -24,7 +24,7 @@ function TodoItem({ task, deleteTask, toggleTask, editTask }) {
         <span
           onClick={() => toggleTask(task.id)}
           className={`cursor-pointer flex-1 ${
-            task.completed ? "line-through text-gray-400" : "text-gray-700"
+            task.completed ? "line-through text-gray-400" : "text-gray-700 dark:text-gray-200"
           }`}
         >
           {task.text}

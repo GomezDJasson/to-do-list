@@ -71,21 +71,21 @@ function TodoList() {
 
         <button
           onClick={() => setFilter("all")}
-          className="px-3 py-1 bg-gray-200 rounded"
+          className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded"
         >
           Todas
         </button>
 
         <button
           onClick={() => setFilter("pending")}
-          className="px-3 py-1 bg-yellow-200 rounded"
+          className="px-3 py-1 bg-yellow-200 dark:bg-yellow-600 text-gray-800 dark:text-white rounded"
         >
           Pendientes
         </button>
 
         <button
           onClick={() => setFilter("completed")}
-          className="px-3 py-1 bg-green-200 rounded"
+          className="px-3 py-1 bg-green-200 dark:bg-green-600 text-gray-800 dark:text-white rounded"
         >
           Completadas
         </button>
