@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import TodoInput from "./TodoInput"
 import TodoItem from "./TodoItem"
 
@@ -37,6 +38,10 @@ function TodoList() {
           : task
       )
     )
+  }
+
+  const clearCompleted = () => {
+    setTasks(tasks.filter(task => !task.completed))
   }
 
   const filteredTasks = tasks.filter(task => {
@@ -91,16 +96,36 @@ function TodoList() {
         {pendingTasks} tareas pendientes
       </p>
 
+      <button
+        onClick={clearCompleted}
+        className="mt-4 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition"
+      >
+        Limpiar completadas
+      </button>
+
       <div className="mt-4 space-y-2">
-        {filteredTasks.map(task => (
-          <TodoItem
-            key={task.id}
-            task={task}
-            deleteTask={deleteTask}
-            toggleTask={toggleTask}
-            editTask={editTask}
-          />
-        ))}
+
+        <AnimatePresence>
+
+          {filteredTasks.map(task => (
+            <motion.div
+              key={task.id}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <TodoItem
+                task={task}
+                deleteTask={deleteTask}
+                toggleTask={toggleTask}
+                editTask={editTask}
+              />
+            </motion.div>
+          ))}
+
+        </AnimatePresence>
+
       </div>
 
     </div>
