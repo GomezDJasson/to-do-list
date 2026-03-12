@@ -71,21 +71,33 @@ function TodoList() {
 
         <button
           onClick={() => setFilter("all")}
-          className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded"
+          className={`px-3 py-1 rounded transition ${
+            filter === "all"
+              ? "bg-indigo-500 text-white"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+          }`}
         >
           Todas
         </button>
 
         <button
           onClick={() => setFilter("pending")}
-          className="px-3 py-1 bg-yellow-200 dark:bg-yellow-600 text-gray-800 dark:text-white rounded"
+          className={`px-3 py-1 rounded transition ${
+            filter === "pending"
+              ? "bg-yellow-500 text-white"
+              : "bg-yellow-200 dark:bg-yellow-600 text-gray-800 dark:text-white"
+          }`}
         >
           Pendientes
         </button>
 
         <button
           onClick={() => setFilter("completed")}
-          className="px-3 py-1 bg-green-200 dark:bg-green-600 text-gray-800 dark:text-white rounded"
+          className={`px-3 py-1 rounded transition ${
+            filter === "completed"
+              ? "bg-green-500 text-white"
+              : "bg-green-200 dark:bg-green-600 text-gray-800 dark:text-white"
+          }`}
         >
           Completadas
         </button>
