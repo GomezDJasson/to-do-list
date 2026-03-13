@@ -7,7 +7,7 @@ function TodoInput({ addTask }) {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if(text.trim() === "") return
+    if (text.trim() === "") return
 
     addTask(text)
     setText("")
@@ -21,7 +21,7 @@ function TodoInput({ addTask }) {
         placeholder="Nueva tarea..."
         value={text}
         onChange={(e) => setText(e.target.value)}
-        className="border border-gray-300 p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        className="border border-gray-300 dark:border-gray-600 p-2 rounded-lg w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
       />
 
       <button

@@ -21,7 +21,7 @@ function TodoItem({ task, deleteTask, toggleTask, editTask }) {
       }}
       transition={{ duration: 0.2 }}
     >
-
+      
       {isEditing ? (
         <input
           value={newText}

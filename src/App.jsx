@@ -29,7 +29,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
 
-      <div className="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8 w-[400px] text-gray-800 dark:text-gray-200">
+      <div className="bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8 text-gray-800 dark:text-gray-200">
 
         <button
           onClick={() => setDarkMode(!darkMode)}
