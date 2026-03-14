@@ -1,10 +1,26 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { Pencil, Trash2, Save, GripVertical } from "lucide-react"
 
 function TodoItem({ task, deleteTask, toggleTask, editTask }) {
 
   const [isEditing, setIsEditing] = useState(false)
   const [newText, setNewText] = useState(task.text)
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition
+  } = useSortable({ id: task.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition
+  }
 
   const handleEdit = () => {
     if(newText.trim() === "") return
@@ -14,13 +30,23 @@ function TodoItem({ task, deleteTask, toggleTask, editTask }) {
 
   return (
     <motion.div
-      className="flex justify-between items-center bg-gray-50 dark:bg-gray-800 p-3 rounded-lg shadow-sm"
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg shadow-sm"
       animate={{
         scale: task.completed ? 0.98 : 1,
         opacity: task.completed ? 0.7 : 1
       }}
       transition={{ duration: 0.2 }}
     >
+
+    <div
+      {...attributes}
+      {...listeners}
+      className="cursor-grab text-gray-400"
+    >
+      <GripVertical size={18} />
+    </div>
       
       {isEditing ? (
         <input
@@ -43,29 +69,29 @@ function TodoItem({ task, deleteTask, toggleTask, editTask }) {
         </motion.span>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex gap-3 items-center">
 
         {isEditing ? (
           <button
             onClick={handleEdit}
-            className="text-green-500"
+            className="text-green-500 hover:scale-110 transition"
           >
-            💾
+            <Save size={18} />
           </button>
         ) : (
           <button
             onClick={() => setIsEditing(true)}
-            className="text-blue-500"
+            className="text-yellow-500 hover:scale-110 transition"
           >
-            ✏️
+            <Pencil size={18} />
           </button>
         )}
 
         <button
           onClick={() => deleteTask(task.id)}
-          className="text-red-500"
+          className="text-red-500 hover:scale-110 transition"
         >
-          ❌
+          <Trash2 size={18} />
         </button>
 
       </div>

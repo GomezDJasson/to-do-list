@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { DndContext, closestCenter } from "@dnd-kit/core"
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { Pencil, Trash2, Plus } from "lucide-react"
 import TodoInput from "./TodoInput"
 import TodoItem from "./TodoItem"
 
@@ -128,10 +131,65 @@ function TodoList() {
   const pendingTasks =
     activeList?.tasks.filter(task => !task.completed).length || 0
 
-  return (
-    <div className="flex gap-6">
+  const handleDragEnd = (event) => {
 
-      <div className="w-48 flex-shrink-0">
+    const { active, over } = event
+
+    if (!over || active.id === over.id) return
+
+    const oldIndex = activeList.tasks.findIndex(task => task.id === active.id)
+    const newIndex = activeList.tasks.findIndex(task => task.id === over.id)
+
+    const newTasks = [...activeList.tasks]
+
+    const [movedTask] = newTasks.splice(oldIndex, 1)
+    newTasks.splice(newIndex, 0, movedTask)
+
+    setLists(
+      lists.map(list =>
+        list.id === activeListId
+          ? { ...list, tasks: newTasks }
+          : list
+      )
+    )
+  }
+
+  const editList = (id) => {
+    const newName = prompt("Nuevo nombre de la lista")
+
+    if (!newName) return
+
+    setLists(
+      lists.map(list =>
+        list.id === id
+          ? { ...list, name: newName }
+          : list
+      )
+    )
+  }
+
+  const deleteList = (id) => {
+
+    const confirmDelete = confirm("¿Eliminar esta lista?")
+
+    if (!confirmDelete) return
+
+    const updatedLists = lists.filter(list => list.id !== id)
+
+    setLists(updatedLists)
+
+    if (updatedLists.length > 0) {
+      setActiveListId(updatedLists[0].id)
+    }
+  }
+
+  const pendingTasksCount = (list) =>
+  list.tasks.filter(task => !task.completed).length
+
+  return (
+    <div className="flex flex-col md:flex-row gap-6">
+
+      <div className="hidden md:block md:w-48 flex-shrink-0">
 
         <h2 className="font-bold mb-3 text-gray-700 dark:text-gray-200">
           Listas
@@ -140,27 +198,99 @@ function TodoList() {
         <div className="flex flex-col gap-2">
 
           {lists.map(list => (
-            <button
+
+            <div
               key={list.id}
-              onClick={() => setActiveListId(list.id)}
-              className={`text-left px-3 py-2 rounded transition ${
+              className={`flex items-center justify-between px-3 py-2 rounded ${
                 activeListId === list.id
                   ? "bg-indigo-500 text-white"
                   : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
               }`}
             >
-              {list.name}
-            </button>
+
+              <button
+                onClick={() => setActiveListId(list.id)}
+                className="flex-1 text-left"
+              >
+                {list.name} ({pendingTasksCount(list)})
+              </button>
+
+              <div className="flex gap-2 ml-2">
+
+                <button
+                  onClick={() => editList(activeListId)}
+                  className="text-yellow-500 hover:scale-110 transition"
+                >
+                  <Pencil size={18} />
+                </button>
+
+                <button
+                  onClick={() => deleteList(activeListId)}
+                  className="text-red-500 hover:scale-110 transition"
+                >
+                  <Trash2 size={18} />
+                </button>
+
+              </div>
+
+            </div>
+
           ))}
 
           <button
             onClick={addList}
-            className="text-left px-3 py-2 rounded bg-gray-300 dark:bg-gray-600"
+            className="w-full bg-indigo-500 text-white py-2 rounded-lg flex items-center justify-center gap-2"
           >
-            + Nueva lista
+            <Plus size={18} />
+            Nueva lista
           </button>
 
         </div>
+
+      </div>
+
+      <div className="md:hidden mb-4 space-y-2">
+
+        <div className="flex gap-2">
+
+          <select
+            value={activeListId || ""}
+            onChange={(e) => setActiveListId(Number(e.target.value))}
+            className="flex-1 p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+          >
+            {lists.map(list => (
+              <option key={list.id} value={list.id}>
+                {list.name} ({pendingTasksCount(list)})
+              </option>
+            ))}
+          </select>
+
+          <button
+            onClick={() => {
+              if (activeListId) editList(Number(activeListId))
+            }}
+            className="text-yellow-500 hover:scale-110 transition"
+          >
+            <Pencil size={16} />
+          </button>
+
+          <button
+            onClick={() => {
+              if (activeListId) deleteList(Number(activeListId))
+            }}
+            className="text-red-400 hover:scale-110 transition"
+          >
+            <Trash2 size={16} />
+          </button>
+
+        </div>
+
+        <button
+          onClick={addList}
+          className="w-full bg-indigo-500 text-white py-2 rounded-lg"
+        >
+          + Nueva lista
+        </button>
 
       </div>
 
@@ -177,7 +307,9 @@ function TodoList() {
             {activeList?.name}
           </h2>
 
-          <TodoInput addTask={addTask} />
+          <div className="hidden md:block">
+            <TodoInput addTask={addTask} />
+          </div>
 
           <div className="flex justify-center gap-2 mt-4">
 
@@ -227,29 +359,36 @@ function TodoList() {
             Limpiar completadas
           </button>
 
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 space-y-2 pb-24">
 
-            <AnimatePresence>
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
 
-              {filteredTasks.map(task => (
-                <motion.div
-                  key={task.id}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.2 }}
-                >
+              <SortableContext
+                items={filteredTasks.map(task => task.id)}
+                strategy={verticalListSortingStrategy}
+              >
+
+                {filteredTasks.map(task => (
                   <TodoItem
+                    key={task.id}
                     task={task}
                     deleteTask={deleteTask}
                     toggleTask={toggleTask}
                     editTask={editTask}
                   />
-                </motion.div>
-              ))}
+                ))}
 
-            </AnimatePresence>
+              </SortableContext>
 
+            </DndContext>
+
+          </div>
+
+          <div className="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 p-3 border-t border-gray-300 dark:border-gray-700">
+            <TodoInput addTask={addTask} />
           </div>
 
         </motion.div>
