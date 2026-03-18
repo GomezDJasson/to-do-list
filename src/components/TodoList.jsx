@@ -186,6 +186,14 @@ function TodoList() {
   const pendingTasksCount = (list) =>
   list.tasks.filter(task => !task.completed).length
 
+  const completedTasks =
+    activeList?.tasks.filter(task => task.completed).length || 0
+
+  const totalTasks = activeList?.tasks.length || 0
+
+  const progress =
+    totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100)
+
   return (
     <div className="flex flex-col md:flex-row gap-6">
 
@@ -358,6 +366,24 @@ function TodoList() {
           >
             Limpiar completadas
           </button>
+
+          <div className="mb-4">
+
+            <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-1">
+              <span>Progreso</span>
+              <span>{progress}%</span>
+            </div>
+
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+
+              <div
+                className="bg-indigo-500 h-3 rounded-full transition-all"
+                style={{ width: `${progress}%` }}
+              />
+
+            </div>
+
+          </div>
 
           <div className="mt-4 space-y-2 pb-24">
 

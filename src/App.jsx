@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import TodoList from "./components/TodoList"
+import Footer from "./components/Footer"
 
 function App() {
 
@@ -43,6 +44,8 @@ function App() {
         </h1>
 
         <TodoList />
+
+        <Footer />
 
       </div>
 
