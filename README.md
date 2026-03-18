@@ -12,7 +12,7 @@ Aplicación de gestión de tareas desarrollada con **React**, diseñada para ser
 
 ## 📸 Preview
 
-![App Screenshot](/src/assets/todo-dark.png, /src/assets/todo-light.png)
+![App Screenshot](/src/assets/todo-dark.png)
 
 ---
 
@@ -96,7 +96,7 @@ En este proyecto se aplicaron conceptos como:
 
 Desarrollado por **Jasson D. Gomez**
 
-* GitHub: [TU_GITHUB](https://github.com/gomezdjasson/)
-* LinkedIn: [TU_LINKEDIN](https://www.linkedin.com/in/jassondgomez/)
+* GitHub: [Github](https://github.com/gomezdjasson/)
+* LinkedIn: [Linkedin](https://www.linkedin.com/in/jassondgomez/)
 
 ---
